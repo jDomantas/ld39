@@ -1,4 +1,15 @@
-function onLoad() {
+'use strict';
+
+window.ld39 = {
+    states: {},
+    tiles: {},
+    entities: {},
+    util: {},
+    gameWidth: 24,
+    gameHeight: 20,
+};
+
+ld39.onLoad = function() {
     var width = window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;
@@ -8,27 +19,30 @@ function onLoad() {
     || document.body.clientHeight;
 
     var container = document.getElementById('container');
-    var widthScale = Math.floor(width / 320);
-    var heightScale = Math.floor((height - 20) / 240);
-    var scale = Math.max(1, Math.min(widthScale, heightScale));
-    container.style.width = (scale * 320) + 'px';
-    container.style.height = (scale * 240) + 'px';
 
-    window.app = new PLAYGROUND.Application({
+    var pixelWidth = ld39.gameWidth * 8;
+    var pixelHeight = ld39.gameHeight * 8;
+
+    var widthScale = Math.floor(width / pixelWidth);
+    var heightScale = Math.floor((height - 20) / pixelHeight);
+    var scale = Math.max(1, Math.min(widthScale, heightScale));
+    container.style.width = (scale * pixelWidth) + 'px';
+    container.style.height = (scale * pixelHeight) + 'px';
+
+    ld39.app = new PLAYGROUND.Application({
         smoothing: false,
         scale: scale,
-        width: 320,
-        height: 240,
+        width: pixelWidth,
+        height: pixelHeight,
         container: '#container',
         preferedAudioFormat: 'mp3',
 
         create: function() {
-            this.loadSounds('jump', 'music');
+            this.loadImages('tiles', 'levels/level1');
         },
 
         ready: function() {
-            this.music.play('music', true);
-            this.setState(Game);
+            this.setState(ld39.states.Game);
         }
     });
 }
