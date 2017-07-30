@@ -110,30 +110,40 @@ ld39.states.Game = {
 
         var tileX = Math.floor(this.app.mouse.x / 8);
         var tileY = Math.floor(this.app.mouse.y / 8);
-        if (!this.oldPressed) {
-            if (this.app.mouse.left) {
-                if (this.tileLit[tileY][tileX]) {
-                    if (this.tiles[tileY][tileX].click)
-                        this.tiles[tileY][tileX].click(this, tileX, tileY);
-                } else {
-                    this.powerTile(tileX, tileY);
+        if (this.app.keyboard.keys.space) {
+            if (!this.oldPressed) {
+                if (this.app.mouse.left) {
+                    if (this.tileLit[tileY][tileX]) {
+                        if (this.tiles[tileY][tileX].click)
+                            this.tiles[tileY][tileX].click(this, tileX, tileY);
+                    } else {
+                        this.powerTile(tileX, tileY);
+                    }
+                } else if (this.app.mouse.right) {
+                    this.unpowerTile(tileX, tileY);
                 }
-            } else if (this.app.mouse.right) {
-                this.unpowerTile(tileX, tileY);
             }
-        }
-        if (!this.oldPressedCommand && this.app.keyboard.keys.space) {
-            var x = Math.round(this.app.mouse.x) / 8;
-            var y = Math.round(this.app.mouse.y) / 8;
-            var player = this.getPlayer();
-            if (player !== null)
-                player.command(this, x, y);
+        } else {
+            if (!this.oldPressed) {
+                var player = this.getPlayer();
+                var x = Math.round(this.app.mouse.x) / 8;
+                var y = Math.round(this.app.mouse.y) / 8;
+                if (this.app.mouse.left) {
+                    if (this.tileLit[tileY][tileX]) {
+                        if (this.tiles[tileY][tileX].click)
+                            this.tiles[tileY][tileX].click(this, tileX, tileY);
+                        else if (player !== null)
+                            player.command(this, x, y);
+                    } else if (player !== null) {
+                        player.command(this, x, y);
+                    }
+                }
+            }
         }
         if (!this.oldPressedR && this.app.keyboard.keys.r) {
             this.loadLevel(this.currentLevel);
         }
         this.oldPressed = this.app.mouse.left || this.app.mouse.right;
-        this.oldPressedCommand = this.app.keyboard.keys.space;
         this.oldPressedR = this.app.keyboard.keys.r;
     },
 

@@ -61,7 +61,7 @@ ld39.loadLevel = function(game, level) {
         game.getPlayer().teleportInAnimation = 0;
         game.getPlayer().fresh = false;
         game.tiles[6][18] = new t.Floor();
-        drawText(2, 2, "MOUSE+SPACE TO MOVE");
+        drawText(2, 2, "USE MOUSE TO MOVE");
         drawText(3, 17, "WALK TO THE");
         drawText(10, 18, "TRANSPORTER");
     } else if (level === 1) {
@@ -72,10 +72,12 @@ ld39.loadLevel = function(game, level) {
         game.tiles[9][9] = new t.Generator(21, 2, 1, true, true);
         game.tiles[8][8] = new t.Display(0);
         game.tiles[8][9] = new t.Display(1);
-        drawText(2, 2, "LEFT-CLICK");
-        drawText(5, 3, "TO POWER TILES");
-        drawText(2, 4, "RIGHT-CLICK");
-        drawText(5, 5, "TO UNPOWER TILES");
+        drawText(2, 1, "HOLD SPACE TO CONTROL");
+        drawText(5, 2, "POWER GRID");
+        drawText(2, 3, "LEFT-CLICK");
+        drawText(5, 4, "TO POWER TILES");
+        drawText(2, 5, "RIGHT-CLICK");
+        drawText(5, 6, "TO UNPOWER TILES");
         drawText(2, 16, "CLICK POWERED DOOR");
         drawText(3, 17, "TO OPEN OR CLOSE IT");
     } else if (level === 3) {
