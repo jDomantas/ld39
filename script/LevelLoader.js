@@ -128,5 +128,10 @@ ld39.loadLevel = function(game, level) {
         drawText(15, 9, "SHOOT");
         drawText(15, 10, "WHEN");
         drawText(15, 11, "POWERED");
+    } else if (level === 8) {
+        game.tiles[2][14] = new t.Generator(10, 2, 2, true, false);
+        game.tiles[1][14] = new t.Display(2);
+        game.tiles[11][6] = new t.Generator(10, 2, 2, true, false);
+        game.tiles[10][6] = new t.Display(2);
     }
 }

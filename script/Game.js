@@ -75,7 +75,7 @@ ld39.states.Game = {
                 // victory, go to next level
                 var level = this.currentLevel + 1;
                 ld39.util.unlockLevel(level);
-                if (level === 300) {
+                if (level === 9) {
                     this.app.setState(ld39.states.Menu);
                 } else {
                     this.loadLevel(level);
