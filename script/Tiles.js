@@ -124,6 +124,7 @@ ld39.tiles.Generator.prototype.update = function(game, dt, x, y) {
                 if (x < game.width - 1 && game.tiles[y][x + 1].isGenerator) {
                     game.tiles[y][x + 1].alwaysLit = true;
                 }
+                game.app.sound.play('powerup');
                 game.recalcPower();
             }
         }
@@ -314,7 +315,8 @@ ld39.tiles.Teleporter.prototype.update = function(game, dt, x, y) {
             if (Math.abs(dx) <= 0.3 && Math.abs(dy) <= 0.3) {
                 player.vulnerable = false;
                 player.teleportOutAnimation = 1;
-                game.victoryTimer = 1.8;
+                game.victoryTimer = 2;
+                game.app.sound.play('transporter');
                 // to prevent from timer getting stuck at 1
                 this.isEnd = false;
             }
@@ -339,9 +341,14 @@ ld39.tiles.Turret = function() {
     this.turnTimer = 0.2;
     this.fireTimer = 0.8;
     this.isTurret = true;
+    this.wasOn = false;
 }
 
 ld39.tiles.Turret.prototype.update = function(game, dt, x, y) {
+    if (this.wasOn !== game.tileLit[y][x]) {
+        game.app.sound.play(this.wasOn ? 'turretOff' : 'turretOn');
+        this.wasOn = game.tileLit[y][x];
+    }
     if (!game.tileLit[y][x]) {
         this.turnTimer = 0.2;
         this.fireTimer = 1.2;
@@ -394,6 +401,7 @@ ld39.tiles.Turret.prototype.update = function(game, dt, x, y) {
             this.fireTimer -= dt;
             if (this.fireTimer <= 0) {
                 this.fireTimer = 1.2;
+                game.app.sound.play('shoot');
                 target.incomingFire.push({
                     x: x + 0.5,
                     y: y + 0.2,

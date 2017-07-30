@@ -152,8 +152,10 @@ ld39.util.updateEntity = function(game, dt, entity, canWalk) {
         } else {
             // kill entity
             entity.incomingFire.splice(i, 1);
-            if (entity.vulnerable)
+            if (entity.vulnerable) {
+                game.app.sound.play('death');
                 entity.dead = true;
+            }
         }
     }
 }
@@ -176,9 +178,14 @@ ld39.entities.Player = function(x, y) {
     this.vulnerable = false;
     this.visible = true;
     this.walkFails = 0;
+    this.fresh = true;
 }
 
 ld39.entities.Player.prototype.update = function(game, dt) {
+    if (this.fresh) {
+        game.app.sound.play('transporter');
+        this.fresh = false;
+    }
     if (this.teleportInAnimation > 0) {
         this.teleportInAnimation -= dt;
         this.vulnerable = false;
@@ -263,6 +270,7 @@ ld39.entities.Enemy.prototype.update = function(game, dt) {
             var player = game.getPlayer();
             if (player !== null) {
                 // console.log('shot!');
+                game.app.sound.play('shoot');
                 player.incomingFire.push({ x: this.x, y: this.y, dir: 4, moveTime: 0 });
             }
         }
@@ -336,6 +344,7 @@ ld39.entities.Keycard.prototype.update = function(game, dt) {
         if (Math.abs(dx) <= 0.5 && Math.abs(dy) <= 0.5) {
             this.dead = true;
             player.hasKeycard = true;
+            game.app.sound.play('keycard');
         }
     }
 }

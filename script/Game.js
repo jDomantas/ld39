@@ -36,7 +36,7 @@ ld39.states.Game = {
             }
         }
 
-        this.loadLevel(7);
+        this.loadLevel(0);
     },
 
     loadLevel: function(level) {
@@ -189,6 +189,7 @@ ld39.states.Game = {
             } else {
                 // no path
             }
+            this.app.sound.play('notEnoughPower');
         } else {
             this.lightPath(bestX, bestY);
             this.recalcPower();

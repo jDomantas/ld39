@@ -70,6 +70,7 @@ ld39.loadLevel = function(game, level) {
     game.tiles = tiles;
     if (level === 0) {
         game.getPlayer().teleportInAnimation = 0;
+        game.getPlayer().fresh = false;
         game.tiles[6][18] = new t.Floor();
         drawText(2, 2, "MOUSE+SPACE TO MOVE");
         drawText(3, 17, "WALK TO THE");

@@ -35,10 +35,11 @@ ld39.onLoad = function() {
         width: pixelWidth,
         height: pixelHeight,
         container: '#container',
-        preferedAudioFormat: 'mp3',
 
         create: function() {
             this.loadImages('tiles', 'levels');
+            this.loadSounds('shoot', 'death', 'powerup', 'notEnoughPower',
+                'turretOn', 'turretOff', 'keycard', 'transporter');
         },
 
         ready: function() {
