@@ -6,10 +6,7 @@ ld39.loadLevel = function(game, level) {
             game.tiles[y][x + i] = new ld39.tiles.Letter(text[i]);
         }
     }
-    var image = cq(game.app.images.levels)
-        .context
-        .getImageData(0, level * 21, ld39.gameWidth, ld39.gameHeight)
-        .data;
+    var levelData = game.app.data.levels.levels[level];
     var tiles = [];
     var t = ld39.tiles;
     var nextPriority = 10;
@@ -17,50 +14,42 @@ ld39.loadLevel = function(game, level) {
     for (var y = 0; y < ld39.gameHeight; y++) {
         tiles.push([]);
         for (var x = 0; x < ld39.gameWidth; x++) {
-            var index = y * ld39.gameWidth + x;
-            var r = image[index * 4 + 0];
-            var g = image[index * 4 + 1];
-            var b = image[index * 4 + 2];
+            var ch = levelData[y][x];
             var tile;
-            if (r === 255 && g === 255 && b === 255) {
+            if (ch === '.') {
                 tile = new t.Floor();
                 prevWall = false;
-            } else if (r === 0 && g === 0 && b === 0) {
+            } else if (ch === '#') {
                 tile = new t.Wall();
                 prevWall = true;
-            } else if (r === 0 && g === 0 && b === 255) {
+            } else if (ch === '%') {
                 tile = new t.KeycardDoor(prevWall);
                 prevWall = false;
-            } else if (r === 0 && g === 128 && b === 255) {
+            } else if (ch === '!') {
                 tile = new t.Floor();
                 prevWall = false;
                 game.entities.push(new ld39.entities.Keycard(x + 0.5, y + 0.5));
-            } else if (r === 255 && g === 0 && b === 255) {
+            } else if (ch === '+') {
                 tile = new t.Door(prevWall);
                 prevWall = false;
-            } else if (r === 255 && g === 0 && b === 0) {
+            } else if (ch === '$') {
                 tile = new t.Floor();
                 prevWall = false;
                 var xx = x + Math.floor(Math.random() * 2) / 4 + 0.375;
                 var yy = y + Math.floor(Math.random() * 2) / 4 + 0.375;
                 game.entities.push(new ld39.entities.Enemy(xx, yy));
-            } else if (r === 0 && g === 255 && b === 0) {
+            } else if (ch === '@') {
                 tile = new t.Teleporter(false);
                 prevWall = false;
                 game.entities.push(new ld39.entities.Player(x + 0.5, y + 0.5));
-            } else if (r === 255 && g === 255 && b === 0) {
+            } else if (ch === '>') {
                 tile = new t.Teleporter(true);
                 prevWall = false;
-            } else if (r === 255 && g === 128 && b === 0) {
+            } else if (ch === 'X') {
                 tile = new t.Turret();
                 prevWall = false;
-            } else if (r === 128 && g === 0 && b === 128) {
-                tile = new t.Generator(1, 10);
-                tiles[y - 1][x] = new t.Display();
-                prevWall = false;
             } else {
-                console.log('bad color at (' + x + '; ' + y + ')');
-                console.log('r = ' + r + ', g = ' + g + ', b = ' + b);
+                console.log('bad tile at (' + x + '; ' + y + '), ch = ' + ch);
                 tile = new t.Floor();
                 prevWall = false;
             }

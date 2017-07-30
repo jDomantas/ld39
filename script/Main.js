@@ -37,7 +37,8 @@ ld39.onLoad = function() {
         container: '#container',
 
         create: function() {
-            this.loadImages('tiles', 'levels');
+            this.loadData('levels');
+            this.loadImages('tiles');
             this.loadSounds('shoot', 'death', 'powerup', 'notEnoughPower',
                 'turretOn', 'turretOff', 'keycard', 'transporter', 'door');
         },
