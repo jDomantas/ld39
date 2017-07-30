@@ -36,7 +36,7 @@ ld39.states.Game = {
             }
         }
 
-        this.loadLevel(5);
+        this.loadLevel(0);
     },
 
     loadLevel: function(level) {
