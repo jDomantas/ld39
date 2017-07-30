@@ -231,6 +231,7 @@ ld39.tiles.Door.prototype.click = function(game, x, y) {
     }
     this.open = !this.open;
     this.walkable = this.open;
+    game.app.sound.play('door');
 }
 
 ld39.tiles.Door.prototype.drawBack = function(layer, game, x, y) {
@@ -269,13 +270,14 @@ ld39.tiles.KeycardDoor.prototype.update = function(game, dt, x, y) {
         this.openProgress = Math.min(openTarget, this.openProgress + openDelta);
     }
     var player = game.getPlayer();
-    if (player !== null && player.hasKeycard) {
+    if (player !== null && player.hasKeycard && !this.open) {
         var dx = player.x - (x + 0.5);
         var dy = player.y - (y + 0.5);
         if (Math.abs(dx) <= 1.5 && Math.abs(dy) <= 1.5) {
             this.open = true;
             this.walkable = true;
             this.allowLight = true;
+            game.app.sound.play('door');
         }
     }
 }

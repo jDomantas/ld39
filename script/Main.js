@@ -39,7 +39,7 @@ ld39.onLoad = function() {
         create: function() {
             this.loadImages('tiles', 'levels');
             this.loadSounds('shoot', 'death', 'powerup', 'notEnoughPower',
-                'turretOn', 'turretOff', 'keycard', 'transporter');
+                'turretOn', 'turretOff', 'keycard', 'transporter', 'door');
         },
 
         ready: function() {

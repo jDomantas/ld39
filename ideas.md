@@ -28,26 +28,19 @@ To-do:
 * ~~Proper transporter sprite~~
 * ~~Turrets~~
 * ~~Shooting turrets~~
-* Blood particles
+* ~~Blood particles~~
 * Menu with level selection
-* Dance
+* ~~Dance~~
 * Sound effects:
-    * Shoot
-    * Death
+    * ~~Shoot~~
+    * ~~Death~~
     * Door opening/closing
-    * Generator powered up
-    * Turret powered up/down
-    * Keycard picked up
-    * Level completed
-    * Level started
-    * Not enough power
-
-Level ideas:
-* Intro: power & open door, take keycard, open door with keycard, activate second generator (third door only reachable by it), open third door, exit.
-* Maze-ish thing. Explore rooms looking for keycards.
-* Enemies intro. Circular level structure, bait them around and trap them (close doors).
-* Turrets intro. Enemies blocking the way, bait them towards generator where there are turrets.
-* Activate second generator and connect to the first to increase reachable distance to reach final door.
+    * ~~Generator powered up~~
+    * ~~Turret powered up/down~~
+    * ~~Keycard picked up~~
+    * ~~Level completed~~
+    * ~~Level started~~
+    * ~~Not enough power~~
 
 Levels:
 1. Intro:

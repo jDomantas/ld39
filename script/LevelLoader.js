@@ -117,6 +117,8 @@ ld39.loadLevel = function(game, level) {
         game.tiles[7][19] = new t.Display(2);
         drawText(2, 7, "AVOID");
         drawText(0, 8, "ENEMIES");
+        drawText(12, 16, "PRESS R TO");
+        drawText(11, 17, "RETRY LEVEL");
     } else if (level === 6) {
         game.tiles[15][11] = new t.Generator(1, 4, 0, false, false);
         game.tiles[15][12] = new t.Generator(26, 5, 1, true, false);

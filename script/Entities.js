@@ -155,6 +155,9 @@ ld39.util.updateEntity = function(game, dt, entity, canWalk) {
             if (entity.vulnerable) {
                 game.app.sound.play('death');
                 entity.dead = true;
+                for (var i = 0; i < 20; i++) {
+                    game.entities.push(new ld39.entities.Blood(entity.x, entity.y));
+                }
             }
         }
     }
@@ -179,6 +182,7 @@ ld39.entities.Player = function(x, y) {
     this.visible = true;
     this.walkFails = 0;
     this.fresh = true;
+    this.danceTimer = -30;
 }
 
 ld39.entities.Player.prototype.update = function(game, dt) {
@@ -194,6 +198,10 @@ ld39.entities.Player.prototype.update = function(game, dt) {
         this.vulnerable = false;
         this.visible = false;
     } else {
+        this.danceTimer += dt;
+        if (this.curPath !== null) {
+            this.danceTimer = -30;
+        }
         this.vulnerable = true;
         ld39.util.updateEntity(game, dt, this, true);
     }
@@ -218,8 +226,15 @@ ld39.entities.Player.prototype.draw = function(layer, game) {
         var y = Math.round(this.y * 8 - 5);
         layer.drawImage(game.app.images.tiles, 16 + tpFrame * 8, 48, 8, 8, x, y, 8, 8);
     } else if (this.visible) {
-        var srcx = (this.moveFrame >> 1) * 8;
-        var srcy = 96 + this.dir * 8;
+        var srcx, srcy;
+        if (this.danceTimer >= 0) {
+            var frame = Math.floor(this.danceTimer * 6) % 32;
+            srcx = frame % 16 * 8;
+            srcy = 128 + Math.floor(frame / 16) * 8;
+        } else {
+            srcx = (this.moveFrame >> 1) * 8;
+            srcy = 96 + this.dir * 8;
+        }
         var x = Math.round(this.x * 8 - 4);
         var y = Math.round(this.y * 8 - 5);
         layer.drawImage(game.app.images.tiles, srcx, srcy, 8, 8, x, y, 8, 8);
@@ -354,4 +369,48 @@ ld39.entities.Keycard.prototype.draw = function(layer, game) {
     var x = Math.round(this.x * 8);
     var y = Math.round(this.y * 8 + dy);
     layer.drawImage(game.app.images.tiles, 8, 48, 8, 8, x - 4, y - 4, 8, 8);
+}
+
+ld39.entities.Blood = function(x, y) {
+    this.x = x;
+    this.y = y;
+    this.isControlled = false;
+    this.dead = false;
+    this.solid = false;
+    this.vulnerable = false;
+    this.ttl = Math.random() * 2 + 1;
+    this.x += (Math.random() - 0.5) / 5;
+    this.y += (Math.random() - 0.5) / 5;
+    this.vx = (Math.random() - 0.5) * (Math.random() + 1);
+    this.vy = (Math.random() - 0.5) * (Math.random() + 1);
+    this.z = 0.1;
+    this.vz = Math.random() * 4;
+    this.color = '#' + 'cef'[Math.floor(Math.random() * 3)] + Math.floor(Math.random() * 3) + '0';
+}
+
+ld39.entities.Blood.prototype.update = function(game, dt) {
+    this.vz -= dt * 10;
+    this.z += this.vz * dt;
+    if (this.z <= 0) {
+        this.z = 0;
+        this.vx = 0;
+        this.vy = 0;
+    }
+    var nx = this.x + this.vx * dt;
+    var ny = this.y + this.vy * dt;
+    if (!game.isSolidAt(nx, ny)) {
+        this.x = nx;
+        this.y = ny;
+    }
+
+    this.ttl -= dt;
+    if (this.ttl <= 0) {
+        this.dead = true;
+    }
+}
+
+ld39.entities.Blood.prototype.draw = function(layer, game) {
+    var x = Math.round(this.x * 8);
+    var y = Math.round(this.y * 8 - this.z * 8);
+    layer.fillStyle(this.color).fillRect(x, y, 1, 1);
 }
