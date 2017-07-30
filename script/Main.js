@@ -24,7 +24,7 @@ ld39.onLoad = function() {
     var pixelHeight = ld39.gameHeight * 8;
 
     var widthScale = Math.floor(width / pixelWidth);
-    var heightScale = Math.floor((height - 20) / pixelHeight);
+    var heightScale = Math.floor((height - 40) / pixelHeight);
     var scale = Math.max(1, Math.min(widthScale, heightScale));
     container.style.width = (scale * pixelWidth) + 'px';
     container.style.height = (scale * pixelHeight) + 'px';
