@@ -4,6 +4,8 @@ ld39.states.Game = {
     width: ld39.gameWidth,
     height: ld39.gameHeight,
     initialAlertTime: 1,
+    victoryTimer: 0,
+    currentLevel: 0,
 
     create: function() {
         this.buffer = cq(this.width * 8, this.height * 8);
@@ -34,13 +36,13 @@ ld39.states.Game = {
             }
         }
 
-        this.loadLevel(1);
+        this.loadLevel(7);
     },
 
     loadLevel: function(level) {
+        this.currentLevel = level;
         this.entities = [];
-        this.entities.push(new ld39.entities.Player(1.5, 1.5));
-        this.entities.push(new ld39.entities.Enemy(22, 10));
+        this.victoryTimer = 0;
         ld39.loadLevel(this, level);
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
@@ -66,6 +68,19 @@ ld39.states.Game = {
     },
 
     step: function(dt) {
+        if (this.victoryTimer > 0) {
+            this.victoryTimer -= dt;
+            if (this.victoryTimer <= 0) {
+                // victory, go to next level
+                var level = this.currentLevel + 1;
+                if (level === 300) {
+                    // show victory screen
+                } else {
+                    this.loadLevel(level);
+                }
+            }
+        }
+
         var lightSpeed = 2; // :D
         for (var x = 0; x < this.width; x++) {
             for (var y = 0; y < this.height; y++) {
@@ -86,9 +101,15 @@ ld39.states.Game = {
         }
         for (var i = 0; i < this.entities.length; i++)
             this.entities[i].update(this, dt);
+        for (var i = this.entities.length - 1; i >= 0; i--) {
+            if (this.entities[i].dead) {
+                // add particles?
+                this.entities.splice(i, 1);
+            }
+        }
 
-        var tileX = Math.floor(this.app.mouse.x / 8);// / ld39.app.scale);
-        var tileY = Math.floor(this.app.mouse.y / 8);//) / ld39.app.scale);
+        var tileX = Math.floor(this.app.mouse.x / 8);
+        var tileY = Math.floor(this.app.mouse.y / 8);
         if (!this.oldPressed) {
             if (this.app.mouse.left) {
                 if (this.tileLit[tileY][tileX]) {
@@ -101,17 +122,19 @@ ld39.states.Game = {
                 this.unpowerTile(tileX, tileY);
             }
         }
-        if (!this.oldPressedCommand) {
-            if (this.app.keyboard.keys.space) {
-                var x = Math.round(this.app.mouse.x) / 8;
-                var y = Math.round(this.app.mouse.y) / 8;
-                var player = this.getPlayer();
-                if (player !== null)
-                    player.command(this, x, y);
-            }
+        if (!this.oldPressedCommand && this.app.keyboard.keys.space) {
+            var x = Math.round(this.app.mouse.x) / 8;
+            var y = Math.round(this.app.mouse.y) / 8;
+            var player = this.getPlayer();
+            if (player !== null)
+                player.command(this, x, y);
+        }
+        if (!this.oldPressedR && this.app.keyboard.keys.r) {
+            this.loadLevel(this.currentLevel);
         }
         this.oldPressed = this.app.mouse.left || this.app.mouse.right;
         this.oldPressedCommand = this.app.keyboard.keys.space;
+        this.oldPressedR = this.app.keyboard.keys.r;
     },
 
     powerTile: function(x, y) {
@@ -133,10 +156,8 @@ ld39.states.Game = {
                 }
             }
         }
-        console.log('energy recalculated');
         // find distances to selected tile
         this.runBfs(x, y, 'allowLight');
-        console.log('bfs complete');
         // find best tile to connect to
         var bestX = 0, bestY = -1, bestDif = -2000000000;
         for (var xx = 0; xx < this.width; xx++) {
@@ -151,7 +172,6 @@ ld39.states.Game = {
                 }
             }
         }
-        console.log('x = ' + bestX + ', y = ' + bestY + ', dif = ' + bestDif);
         
         // bestDif >= 0 means that energy >= distace
         if (bestDif < 0) {
@@ -321,7 +341,7 @@ ld39.states.Game = {
                 if (this.tileLit[y][x] && !this.visit[y][x]) {
                     // calculate lit tile count
                     // calculate total generator power
-                    // if generator power <= tile count, depower all tiles
+                    // if generator power <= tile count, unpower all tiles
                     // otherwise, use up all generators,
                     // give primary generator the leftovers
                     this.generatorsFound = {
@@ -345,12 +365,11 @@ ld39.states.Game = {
             }
         }
         if (needRecalc) {
-            console.log('nested recalc');
             this.recalcPower();
         }
     },
 
-    raycastHit: function(sx, sy, ex, ey) {
+    raycastHit: function(sx, sy, ex, ey, ignoreTurrets) {
         if (sx < 0 || sx >= this.width || sy < 0 || sy >= this.height)
             return true;
         if (ex < 0 || ex >= this.width || ey < 0 || ey >= this.height)
@@ -360,93 +379,18 @@ ld39.states.Game = {
             var p = i / 50;
             var x = Math.floor(sx * p + ex * (1 - p));
             var y = Math.floor(sy * p + ey * (1 - p));
-            if (!this.tiles[y][x].walkable)
+            if (!this.tiles[y][x].walkable && (!ignoreTurrets || !this.tiles[y][x].isTurret))
                 return true;
         }
         return false;
     },
 
-    move: function(thing, dt) {
-    },
-
-    moveDown: function(thing, dist) {
-        var left = Math.floor(thing.x + 0.00001);
-        var right = Math.ceil(thing.x + thing.width - 0.00001);
-        var bottom = Math.floor(thing.y + thing.height - 0.00001);
-        var nextBottom = Math.floor(thing.y + thing.height + dist);
-        for (var y = bottom; y <= nextBottom; y++) {
-            for (var x = left; x < right; x++) {
-                if (this.isSolid(x, y)) {
-                    thing.y = y - thing.height;
-                    return false;
-                }
-            }
-        }
-        thing.y += dist;
-        return true;
-    },
-
-    moveLeft: function(thing, dist) {
-        var top = Math.floor(thing.y + 0.00001);
-        var bottom = Math.ceil(thing.y + thing.height - 0.00001);
-        var left = Math.floor(thing.x - 0.00001);
-        var nextLeft = Math.floor(thing.x - dist);
-        for (var x = left; x >= nextLeft; x--) {
-            for (var y = top; y < bottom; y++) {
-                if (this.isSolid(x, y)) {
-                    thing.x = x + 1;
-                    return false;
-                }
-            }
-        }
-        thing.x -= dist;
-        return true;
-    },
-
-    moveRight: function(thing, dist) {
-        var top = Math.floor(thing.y + 0.00001);
-        var bottom = Math.ceil(thing.y + thing.height - 0.00001);
-        var right = Math.floor(thing.x + thing.width - 0.00001);
-        var nextRight = Math.floor(thing.x + thing.width + dist);
-        for (var x = right; x <= nextRight; x++) {
-            for (var y = top; y < bottom; y++) {
-                if (this.isSolid(x, y)) {
-                    thing.x = x - thing.width;
-                    return false;
-                }
-            }
-        }
-        thing.x += dist;
-        return true;
-    },
-
-    moveUp: function(thing, dist) {
-        var left = Math.floor(thing.x + 0.00001);
-        var right = Math.ceil(thing.x + thing.width - 0.00001);
-        var top = Math.floor(thing.y - 0.00001);
-        var nextTop = Math.floor(thing.y - dist);
-        for (var y = top; y >= nextTop; y--) {
-            for (var x = left; x < right; x++) {
-                if (this.isSolid(x, y)) {
-                    thing.y = y + 1;
-                    return false;
-                }
-            }
-        }
-        thing.y -= dist;
-        return true;
-    },
-
-    isSolid: function(x, y) {
-        
-    },
-
-    isSolidAt: function(x, y) {
+    isSolidAt: function(x, y, ignoreTurrets) {
         x = Math.floor(x);
         y = Math.floor(y);
         if (x < 0 || x >= this.width || y < 0 || y >= this.height)
             return true;
-        return !this.tiles[y][x].walkable;
+        return !this.tiles[y][x].walkable && (!ignoreTurrets || !this.tiles[y][x].isTurret);
     },
 
     canPlaceEntity: function(x, y, ignore) {
@@ -458,7 +402,7 @@ ld39.states.Game = {
         if (!can)
             return false;
         for (var i = 0; i < this.entities.length; i++) {
-            if (this.entities[i] === ignore)
+            if (this.entities[i] === ignore || !this.entities[i].solid)
                 continue;
             var dx = x - this.entities[i].x;
             var dy = y - this.entities[i].y;

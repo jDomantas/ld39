@@ -11,5 +11,7 @@ for y in range(img.size[1]):
             pixdata[x, y] = (0, 0, 0, 0)
         if pixdata[x, y] == (163, 73, 164, 255):
             pixdata[x, y] = (0, 0, 0, 0)
+        if pixdata[x, y] == (239, 228, 176, 255):
+            pixdata[x, y] = (255, 230, 160, 255)
 
 img.save('tiles.png')

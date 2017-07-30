@@ -5,15 +5,42 @@ Elements:
 * Enemies/monsters - will try to come towards player, requires quick reactions or working turrets.
 * Secondary generators - either give extra power for main generator when turned on, or act as similarly to starting points.
 
+Map colors:
+* Floor         white (255, 255, 255)
+* Wall          black (0, 0, 0)
+* Keycard door  blue (0, 0, 255)
+* Keycard       light blue (0, 128, 255)
+* Door          pink (255, 0, 255)
+* Enemy         red (255, 0, 0)
+* Start         green (0, 255, 0)
+* End           yellow (255, 255, 0)
+* Turret        orange (255, 128, 0)
+* Generator     purple (128, 0, 128)
 
 To-do:
-* ~~Walking guy~~
-* Turrets
-* Shooting turrets
-* Keycards
-* ~~Enemies~~
-* ~~Chasing enemies~~
-* Shooting enemies
+* ~~Keycard opened doors~~
+* ~~Keycards~~
+* ~~Transporter~~
+* ~~Level transitions~~
+* ~~Proper digit display sprite~~
+* ~~Proper generator sprite~~
+* ~~Transporter animations~~
+* ~~Proper transporter sprite~~
+* ~~Turrets~~
+* ~~Shooting turrets~~
+* Blood particles
+* Menu with level selection
+* Dance
+* Sound effects:
+    * Shoot
+    * Death
+    * Door opening/closing
+    * Generator powered up
+    * Turret powered up/down
+    * Keycard picked up
+    * Level completed
+    * Level started
+    * Not enough power
 
 Level ideas:
 * Intro: power & open door, take keycard, open door with keycard, activate second generator (third door only reachable by it), open third door, exit.
@@ -21,3 +48,20 @@ Level ideas:
 * Enemies intro. Circular level structure, bait them around and trap them (close doors).
 * Turrets intro. Enemies blocking the way, bait them towards generator where there are turrets.
 * Activate second generator and connect to the first to increase reachable distance to reach final door.
+
+Levels:
+1. Intro:
+   Info text: "MOUSE + SPACE TO MOVE", "WALK TO THE TRANSPORTER"
+2. Keycard intro:
+   Info text: "KEYCARDS OPEN LOCKED DOORS"
+3. Generator intro:
+   Info text: "LEFT-CLICK - POWER TILE", "RIGHT-CLICK - UNPOWER TILE",
+   "CLICK POWERED DOOR TO OPEN OR CLOSE IT"
+4. Secondary generators:
+   Info text: "STAND NEXT TO GENERATOR TO TURN IT ON"
+5. Connect generators to increase reachable distance
+6. Enemy intro:
+   Info text: "AVOID ENEMIES", "PRESS R TO RETRY LEVEL"
+7. Enemies: bait them into a room and trap them there
+8. Turret intro: enemies block the way, bait them into turret fire
+   Info text: "TURRETS WILL SHOOT EVERYONE"

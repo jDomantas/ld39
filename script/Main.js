@@ -38,7 +38,7 @@ ld39.onLoad = function() {
         preferedAudioFormat: 'mp3',
 
         create: function() {
-            this.loadImages('tiles', 'levels/level1');
+            this.loadImages('tiles', 'levels');
         },
 
         ready: function() {
