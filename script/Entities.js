@@ -183,7 +183,7 @@ ld39.entities.Player = function(x, y) {
     this.visible = true;
     this.walkFails = 0;
     this.fresh = true;
-    this.danceTimer = -30;
+    this.danceTimer = -60;
 }
 
 ld39.entities.Player.prototype.update = function(game, dt) {
@@ -201,7 +201,7 @@ ld39.entities.Player.prototype.update = function(game, dt) {
     } else {
         this.danceTimer += dt;
         if (this.curPath !== null) {
-            this.danceTimer = -30;
+            this.danceTimer = -60;
         }
         this.vulnerable = true;
         ld39.util.updateEntity(game, dt, this, true);
@@ -229,7 +229,7 @@ ld39.entities.Player.prototype.draw = function(layer, game) {
     } else if (this.visible) {
         var srcx, srcy;
         if (this.danceTimer >= 0) {
-            var frame = Math.floor(this.danceTimer * 6) % 32;
+            var frame = Math.floor(this.danceTimer * 8) % 32;
             srcx = frame % 16 * 8;
             srcy = 128 + Math.floor(frame / 16) * 8;
         } else {

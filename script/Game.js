@@ -36,7 +36,7 @@ ld39.states.Game = {
             }
         }
 
-        this.loadLevel(0);
+        // this.loadLevel(0);
     },
 
     loadLevel: function(level) {
@@ -64,7 +64,8 @@ ld39.states.Game = {
     },
 
     enter: function() {
-        
+        this.loadLevel(this.currentLevel);
+        this.oldPressed = true;
     },
 
     step: function(dt) {
@@ -73,8 +74,9 @@ ld39.states.Game = {
             if (this.victoryTimer <= 0) {
                 // victory, go to next level
                 var level = this.currentLevel + 1;
+                ld39.util.unlockLevel(level);
                 if (level === 300) {
-                    // show victory screen
+                    this.app.setState(ld39.states.Menu);
                 } else {
                     this.loadLevel(level);
                 }
@@ -145,6 +147,17 @@ ld39.states.Game = {
         }
         this.oldPressed = this.app.mouse.left || this.app.mouse.right;
         this.oldPressedR = this.app.keyboard.keys.r;
+    },
+
+    mousedown: function(data) {
+        var x = this.app.mouse.x;
+        var y = this.app.mouse.y;
+        if (y >= 16 || y < 0 || x >= ld39.gameWidth * 8) return;
+        if (x >= ld39.gameWidth * 8 - 16) {
+            this.app.setState(ld39.states.Menu);
+        } else if (x >= ld39.gameWidth * 8 - 32) {
+            this.loadLevel(this.currentLevel);
+        }
     },
 
     powerTile: function(x, y) {
@@ -443,6 +456,12 @@ ld39.states.Game = {
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.buffer, this);
         }
+        var mx = this.app.mouse.x;
+        var my = this.app.mouse.y;
+        var hoverRestart = (mx >= this.width * 8 - 32 && mx < this.width * 8 - 16 && my >= 0 && my < 16);
+        var hoverExit = (mx >= this.width * 8 - 16 && mx < this.width * 8 && my >= 0 && my < 16);
+        this.buffer.drawImage(this.app.images.tiles, 0, hoverRestart ? 176 : 160, 16, 16, this.width * 8 - 32, 0, 16, 16);
+        this.buffer.drawImage(this.app.images.tiles, 16, hoverExit ? 176 : 160, 16, 16, this.width * 8 - 16, 0, 16, 16);
         layer.drawImage(this.floorBuffer.canvas, 0, 0, this.width * 8, this.height * 8);
         layer.drawImage(this.buffer.canvas, 0, 0, this.width * 8, this.height * 8);
     }

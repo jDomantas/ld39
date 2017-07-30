@@ -61,23 +61,23 @@ ld39.loadLevel = function(game, level) {
         game.getPlayer().teleportInAnimation = 0;
         game.getPlayer().fresh = false;
         game.tiles[6][18] = new t.Floor();
-        drawText(2, 2, "USE MOUSE TO MOVE");
+        drawText(4, 2, "USE MOUSE TO MOVE");
         drawText(3, 17, "WALK TO THE");
         drawText(10, 18, "TRANSPORTER");
     } else if (level === 1) {
-        drawText(5, 2, "KEYCARDS OPEN");
+        drawText(5, 2, "KEYCARD OPENS");
         drawText(8, 3, "LOCKED DOORS");
     } else if (level === 2) {
-        game.tiles[9][8] = new t.Generator(1, 1, 0, false, true);
-        game.tiles[9][9] = new t.Generator(21, 2, 1, true, true);
-        game.tiles[8][8] = new t.Display(0);
-        game.tiles[8][9] = new t.Display(1);
-        drawText(2, 1, "HOLD SPACE TO CONTROL");
-        drawText(5, 2, "POWER GRID");
-        drawText(2, 3, "LEFT-CLICK");
-        drawText(5, 4, "TO POWER TILES");
-        drawText(2, 5, "RIGHT-CLICK");
-        drawText(5, 6, "TO UNPOWER TILES");
+        game.tiles[10][8] = new t.Generator(1, 1, 0, false, true);
+        game.tiles[10][9] = new t.Generator(21, 2, 1, true, true);
+        game.tiles[9][8] = new t.Display(0);
+        game.tiles[9][9] = new t.Display(1);
+        drawText(2, 2, "HOLD SPACE TO CONTROL");
+        drawText(5, 3, "POWER GRID");
+        drawText(2, 4, "LEFT-CLICK");
+        drawText(5, 5, "TO POWER TILES");
+        drawText(2, 6, "RIGHT-CLICK");
+        drawText(5, 7, "TO UNPOWER TILES");
         drawText(2, 16, "CLICK POWERED DOOR");
         drawText(3, 17, "TO OPEN OR CLOSE IT");
     } else if (level === 3) {
@@ -111,14 +111,14 @@ ld39.loadLevel = function(game, level) {
         drawText(12, 16, "PRESS R TO");
         drawText(11, 17, "RETRY LEVEL");
     } else if (level === 6) {
-        game.tiles[15][11] = new t.Generator(1, 4, 0, false, false);
-        game.tiles[15][12] = new t.Generator(26, 5, 1, true, false);
-        game.tiles[14][11] = new t.Display(0);
-        game.tiles[14][12] = new t.Display(1);
-        game.tiles[12][19] = new t.Generator(1, 2, 0, false, false);
-        game.tiles[12][20] = new t.Generator(21, 3, 1, true, false);
-        game.tiles[11][19] = new t.Display(0);
-        game.tiles[11][20] = new t.Display(1);
+        game.tiles[15][10] = new t.Generator(1, 4, 0, false, false);
+        game.tiles[15][11] = new t.Generator(26, 5, 1, true, false);
+        game.tiles[14][10] = new t.Display(0);
+        game.tiles[14][11] = new t.Display(1);
+        game.tiles[12][18] = new t.Generator(1, 2, 0, false, false);
+        game.tiles[12][19] = new t.Generator(21, 3, 1, true, false);
+        game.tiles[11][18] = new t.Display(0);
+        game.tiles[11][19] = new t.Display(1);
     } else if (level === 7) {
         game.tiles[16][15] = new t.Generator(1, 4, 0, false, false);
         game.tiles[16][16] = new t.Generator(26, 5, 1, true, false);

@@ -9,7 +9,23 @@ window.ld39 = {
     gameHeight: 20,
 };
 
+ld39.util.unlockLevel = function(lvl) {
+    if (lvl <= ld39.util.lastUnlocked)
+        return;
+    ld39.util.lastUnlocked = lvl;
+    try {
+        localStorage.setItem('lastUnlocked', lvl.toString());
+    } catch(e) {}
+}
 ld39.onLoad = function() {
+    ld39.util.lastUnlocked = 0;
+    try {
+        var unlock = parseInt(localStorage.getItem('lastUnlocked'));
+        if (unlock >= 0) {
+            ld39.util.lastUnlocked = unlock;
+        }
+    } catch(e) {}
+
     var width = window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;
@@ -44,7 +60,7 @@ ld39.onLoad = function() {
         },
 
         ready: function() {
-            this.setState(ld39.states.Game);
+            this.setState(ld39.states.Menu);
         }
     });
 }
