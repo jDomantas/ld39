@@ -158,6 +158,7 @@ ld39.util.updateEntity = function(game, dt, entity, canWalk) {
                 for (var i = 0; i < 20; i++) {
                     game.entities.push(new ld39.entities.Blood(entity.x, entity.y));
                 }
+                return;
             }
         }
     }
